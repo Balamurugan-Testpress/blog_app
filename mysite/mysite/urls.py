@@ -15,9 +15,22 @@ Including another URLconf
 """
 
 from django.contrib import admin
+from django.shortcuts import redirect
 from django.urls import include, path
+from django.contrib.sitemaps.views import sitemap
+from blog.sitemaps import PostSitemap
 
+sitemaps = {
+    "posts": PostSitemap,
+}
 urlpatterns = [
+    path("", lambda request: redirect("blog/", permanent=False)),
     path("admin/", admin.site.urls),
     path("blog/", include("blog.urls", namespace="blog")),
+    path(
+        "sitemap.xml",
+        sitemap,
+        {"sitemaps": sitemaps},
+        name="django.contrib.sitemaps.views.sitemap",
+    ),
 ]
